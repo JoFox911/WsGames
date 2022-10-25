@@ -1,12 +1,22 @@
-const WS_PORT = process.env.WS_PORT || 3030;
+var WebSocketServer = require("ws").Server
+var http = require("http")
+var express = require("express")
+var app = express()
+var port = process.env.PORT || 5000
 
-let WebSocketModule = require('ws')
-let server = WebSocketModule.Server;
-let newSocket = new server({ port: WS_PORT });
+app.use(express.static(__dirname + "/"))
+
+var server = http.createServer(app)
+server.listen(port)
+
+console.log("http server listening on %d", port)
+
+var wss = new WebSocketServer({server: server})
+console.log("websocket server created")
 
 console.log('I AM ALIVE!')
 
-newSocket.on('connection', (socket) => {
+wss.on('connection', (socket) => {
     console.log('Another client connected')
 
 
